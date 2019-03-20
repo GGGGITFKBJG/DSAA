@@ -1,6 +1,7 @@
 //图的构建(邻接链表法), 遍历, DFS, BFS
 #include <iostream>
 #include <cstdlib>
+#include <queue>
 using namespace std;
 
 #define MAX_VERTEX_NUM 10
@@ -63,17 +64,46 @@ void DFS(VNode *g, int v) {
 void DFS_main(VNode *g, int n) {//初始化visited, 开始DFS
     for (int i = 0; i < n; i++) visited[i] = 0;
     for (int i = 0; i < n; i++) {
-        if (visited[i] == 0) {
-            DFS(g, i);
+        if (visited[i] == 0) DFS(g, i);
+    }
+    cout << endl;
+}
+
+void BFS(VNode *g, int v) {
+    cout << g[v].data << " ";
+    visited[v] = 1;
+    queue<PtrtoVNode> q;
+    q.push(&g[v]);
+    while (!q.empty()) {
+        PtrtoVNode pv = q.front();
+        q.pop();
+        PtrtoENode pe = pv->firstEdge;
+        int index;
+        while (pe != nullptr) {
+            index = pe->adjvex;
+            if (visited[index] == 0) {
+                cout << g[index].data << " ";
+                visited[index] = 1;
+                q.push(&g[index]);
+            }
+            pe = pe->next;
         }
+    }
+}
+
+void BFS_main(VNode *g, int n) {
+    for (int i = 0; i < n; i++) visited[i] = 0;
+    for (int i = 0; i < n; i++) {
+        if (visited[i] == 0) BFS(g, i);
     }
     cout << endl;
 }
 
 int main() {
-    creatGraph(G, 6);
-    DFS_main(G, 6);
-    freeGraph(G, 6);
+    creatGraph(G, 5);
+    DFS_main(G, 5);
+    BFS_main(G, 5);
+    freeGraph(G, 5);
     system("pause");
     return 0;
 }
